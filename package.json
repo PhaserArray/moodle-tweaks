@@ -1,0 +1,14 @@
+{
+  "name": "moodle-extension",
+  "version": "1.0.0",
+  "description": "A browser extension that applies some tweaks to Moodle.",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git@PhaserArray:PhaserArray/moodle-extension.git"
+  },
+  "author": "PhaserArray",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {},
+  "dependencies": {}
+}

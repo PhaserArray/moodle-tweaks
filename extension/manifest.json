@@ -1,0 +1,6 @@
+{
+    "name": "Moodle Tweaker",
+    "version": "1.0.0",
+    "description": "A browser extension that applies some tweaks to Moodle.",
+    "manifest_version": 2
+}
