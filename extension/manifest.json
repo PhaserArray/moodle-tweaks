@@ -2,5 +2,17 @@
     "name": "Moodle Tweaker",
     "version": "1.0.0",
     "description": "A browser extension that applies some tweaks to Moodle.",
-    "manifest_version": 2
+    "manifest_version": 2,
+    "background": {
+        "scripts": [
+            "data/libs/browser-polyfill.js",
+            "data/background/test.js"
+        ]
+    },
+    "icons": {
+        "128": "data/images/placeholder-icon-128.png",
+        "48": "data/images/placeholder-icon-48.png",
+        "32": "data/images/placeholder-icon-32.png",
+        "16": "data/images/placeholder-icon-16.png"
+    }
 }
