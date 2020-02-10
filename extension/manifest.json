@@ -3,16 +3,22 @@
     "version": "1.0.0",
     "description": "A browser extension that applies some tweaks to Moodle.",
     "manifest_version": 2,
+    "permissions":[
+        "activeTab"
+    ],
     "background": {
         "scripts": [
-            "data/libs/browser-polyfill.js",
-            "data/background/test.js"
+            "libs/browser-polyfill.js",
+            "background/test.js"
         ]
     },
     "icons": {
-        "128": "data/images/placeholder-icon-128.png",
-        "48": "data/images/placeholder-icon-48.png",
-        "32": "data/images/placeholder-icon-32.png",
-        "16": "data/images/placeholder-icon-16.png"
+        "128": "images/placeholder-icon-128.png",
+        "48": "images/placeholder-icon-48.png",
+        "32": "images/placeholder-icon-32.png",
+        "16": "images/placeholder-icon-16.png"
+    },
+    "browser_action": {
+        "default_icon": "images/placeholder-icon-128.png"
     }
 }
