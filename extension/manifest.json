@@ -1,16 +1,23 @@
 {
-    "name": "Moodle Tweaker",
+    "name": "Moodle Tweaks",
     "version": "1.0.0",
     "description": "A browser extension that applies some tweaks to Moodle.",
     "manifest_version": 2,
     "permissions":[
-        "activeTab"
+        "tabs",
+        "https://fonts.googleapis.com/css"
+    ],
+    "optional_permissions":[
+        "*://*/*"
     ],
     "background": {
         "scripts": [
+            "libs/jquery-3.4.1.min.js",
             "libs/browser-polyfill.js",
-            "background/test.js"
-        ]
+            "libs/content-scripts-register-polyfill.js",
+            "background/moodle-detector.js"
+        ],
+        "persistent": true
     },
     "icons": {
         "128": "images/placeholder-icon-128.png",
@@ -19,6 +26,19 @@
         "16": "images/placeholder-icon-16.png"
     },
     "browser_action": {
-        "default_icon": "images/placeholder-icon-128.png"
-    }
+        "default_icon": {
+            "128": "images/placeholder-icon-128.png",
+            "48": "images/placeholder-icon-48.png",
+            "32": "images/placeholder-icon-32.png",
+            "16": "images/placeholder-icon-16.png"
+        },
+        "default_title": "Moodle Tweaks Control Panel",
+        "default_popup": "popup/popup.html"
+    },
+    "content_scripts": [
+        {
+            "js": ["content/moodle-tweaker.js"],
+            "matches": ["https://google.ee/*"]
+        }
+    ]
 }

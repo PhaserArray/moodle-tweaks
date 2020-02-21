@@ -1,0 +1,124 @@
+:root {
+    --background: #fff;
+    --base-background: #bbb;
+    --highlighted-color: #ff7518;
+
+    --switch-enabled-color: #ffffff;
+    --switch-enabled-background: #1177d1;
+    --switch-enabled-background-hover: #0555af;
+    --switch-enabled-background-click: #003358;
+
+    --switch-disabled-color: #282828;
+    --switch-disabled-background: #ffffff;
+    --switch-disabled-background-hover: #dddddd;
+    --switch-disabled-background-click: #bbbbbb;
+
+    --shadow: 0 2px 4px #00000015, 0 -2px 4px #00000015;
+}
+
+* {
+    /* Default colors and fonts */
+    color: var(--color);
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    /* Don't split any lines */
+    white-space: nowrap;
+
+    /* Display everything in a centered column */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: block;
+
+    /* Set default background to greyish */
+    background: var(--base-background);
+}
+
+/* Header and footer appearance */
+header {
+    font-size: large;
+}
+
+footer {
+    font-size: xx-small;
+}
+
+header, footer {
+    color: var(--highlighted-color);
+}
+
+/* Mixed-appearance stuff */
+
+header, footer, #toggle {
+    font-weight: bold;
+}
+
+#toggle {
+    font-weight: 900;
+}
+
+main * {
+    font-size: medium;
+}
+
+header, footer, #state, #settings {
+    background: var(--background);
+    box-shadow: var(--shadow);
+}
+
+/* Positioning and sizing */
+
+main, header, footer {
+    padding: 1em;
+}
+
+body {
+    margin: 0;
+    min-width: 200px;
+}
+
+button.switch {
+    outline: 0;
+    border: 0;
+    width: 100%;
+    padding: 0.5em;
+}
+
+main :not(:first-child).segment {
+    margin-top: 1em
+}
+
+/* Switch Button Enabled */
+
+button.switch.enabled {
+    color: var(--switch-enabled-color);
+    background-color: var(--switch-enabled-background);
+}
+
+button.switch.enabled:hover {
+    background-color: var(--switch-enabled-background-hover);
+    box-shadow: inset var(--shadow);
+}
+
+button.switch.enabled:active {
+    background-color: var(--switch-enabled-background-click);
+    box-shadow: inset var(--shadow);
+}
+
+/* Switch Button Disabled */
+
+button.switch {
+    color: var(--switch-disabled-color);
+    background-color: var(--switch-disabled-background);
+    cursor: pointer;
+}
+
+button.switch:hover {
+    background-color: var(--switch-disabled-background-hover);
+    box-shadow: inset var(--shadow);
+}
+
+button.switch:active {
+    background-color: var(--switch-disabled-background-click);
+    box-shadow: inset var(--shadow);
+}
