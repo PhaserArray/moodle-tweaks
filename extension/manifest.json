@@ -15,7 +15,7 @@
             "libs/jquery-3.4.1.min.js",
             "libs/browser-polyfill.js",
             "libs/content-scripts-register-polyfill.js",
-            "background/moodle-detector.js"
+            "background/moodle-controller.js"
         ],
         "persistent": true
     },
