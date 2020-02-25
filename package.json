@@ -8,6 +8,8 @@
   },
   "author": "PhaserArray",
   "license": "GPL-3.0-or-later",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
   "dependencies": {}
 }

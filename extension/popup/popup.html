@@ -4,21 +4,23 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
         <link href="popup.css" rel="stylesheet" type="text/css">
         <script src="../libs/browser-polyfill.js"></script>
-        <script src="../libs/jquery-3.4.1.min.js"></script>
         <script src="popup.js"></script>
     </head>
     <body>
-        <header>Moodle Tweaks</header>
+        <header data-localize="extensionName">Moodle Tweaks</header>
         <main>
             <div id="state" class="segment">
-                <button id="toggle" class="switch enabled" title="Click to stop running the extension on this domain!">veebikool.audentes.ee</button>
+                <button id="toggle" class="switch enabled">
+                    <label class="switch_enabled" title="Click to stop!" data-localize="exampleDomain" data-localize-title="domainEnabledTitle">example.com</label>
+                    <label class="switch_disabled" title="Click to start!" data-localize="exampleDomain" data-localize-title="domainDisabledTitle">example.com</label>
+                </button>
             </div>
             <div id="settings" class="segment">
-                <button id="option1" class="switch">Single Page Books</button>
-                <button id="option2" class="switch enabled">Single Page Dictionaries</button>
-                <button id="option3" class="switch enabled">Middle Click Fix</button>
-                <button id="option4" class="switch">Popup Link Blocker</button>
-                <button id="option5" class="switch">Session Keep Alive</button>
+                <button id="option1" class="switch" data-localize="singlePageBooks">Single Page Books</button>
+                <button id="option2" class="switch enabled" data-localize="singlePageDicts">Single Page Dictionaries</button>
+                <button id="option3" class="switch enabled" data-localize="middleClickFix">Middle Click Fix</button>
+                <button id="option4" class="switch" data-localize="popupLinkBlocker">Popup Link Blocker</button>
+                <button id="option5" class="switch" data-localize="sessionKeepAlive">Session Keep Alive</button>
             </div>
         </main>
         <footer>v1.0</footer>

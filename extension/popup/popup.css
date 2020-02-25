@@ -20,6 +20,7 @@
     /* Default colors and fonts */
     color: var(--color);
     font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-transform: lowercase;
 
     /* Don't split any lines */
     white-space: nowrap;
@@ -66,6 +67,17 @@ header, footer, #state, #settings {
     box-shadow: var(--shadow);
 }
 
+button.switch>label {
+    cursor: inherit;
+    background: transparent;
+
+    /* The button has 0.5em padding, 
+    this forces the label to cover it,
+    in order to show tooltip everywhere. */
+    margin: -0.5em;
+    padding: 0.5em;
+}
+
 /* Positioning and sizing */
 
 main, header, footer {
@@ -105,6 +117,10 @@ button.switch.enabled:active {
     box-shadow: inset var(--shadow);
 }
 
+button.switch.enabled .switch_disabled {
+    display: none;
+}
+
 /* Switch Button Disabled */
 
 button.switch {
@@ -121,4 +137,12 @@ button.switch:hover {
 button.switch:active {
     background-color: var(--switch-disabled-background-click);
     box-shadow: inset var(--shadow);
+}
+
+button.switch:not(.enabled) .switch_enabled {
+    display: none;
+}
+
+button.switch.neither>label {
+    display: none;
 }

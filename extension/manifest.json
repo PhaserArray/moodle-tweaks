@@ -1,8 +1,9 @@
 {
-    "name": "Moodle Tweaks",
+    "name": "__MSG_extensionName__",
     "version": "1.0.0",
     "description": "A browser extension that applies some tweaks to Moodle.",
     "manifest_version": 2,
+    "default_locale": "en",
     "permissions":[
         "tabs",
         "https://fonts.googleapis.com/css"

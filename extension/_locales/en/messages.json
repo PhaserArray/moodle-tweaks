@@ -1,0 +1,38 @@
+{
+    "extensionName": {
+        "message": "Moodle Tweaks",
+        "description": "Name of the extension."
+    },
+    "exampleDomain": {
+        "message": "school.moodledemo.net",
+        "description": "Example of a domain, should not actually show up."
+    },
+    "domainEnabledTitle": {
+        "message": "Click to stop running the extension on this website!",
+        "description": "Title/Tooltip shown when the extension is running on the shown domain."
+    },
+    "domainDisabledTitle": {
+        "message": "Click to start running the extension on this domain!",
+        "description": "Title/Tooltip shown when the extension is not running on the shown domain."
+    },
+    "singlePageBooks": {
+        "message": "Single Page Books",
+        "description": "Text shown on the toggle for the single page books feature."
+    },
+    "singlePageDicts": {
+        "message": "Single Page Dictionaries",
+        "description": "Text shown on the toggle for the single page dictionaries feature."
+    },
+    "middleClickFix": {
+        "message": "Middle-click Fix",
+        "description": "Text shown on the toggle for the middle-click fix feature."
+    },
+    "popupLinkBlocker": {
+        "message": "Popups as Tabs",
+        "description": "Text shown on the toggle for the popup blocker feature."
+    },
+    "sessionKeepAlive": {
+        "message": "Prevent Logging out",
+        "description": "Text shown on the toggle for the session keep-alive feature."
+    }
+}
