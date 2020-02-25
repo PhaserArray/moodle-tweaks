@@ -3,6 +3,10 @@
         "message": "Moodle Tweaks",
         "description": "Name of the extension."
     },
+    "extensionDescription": {
+        "message": "A browser extension that applies some tweaks to Moodle.",
+        "description": "Extension's description."
+    },
     "exampleDomain": {
         "message": "school.moodledemo.net",
         "description": "Example of a domain, should not actually show up."
