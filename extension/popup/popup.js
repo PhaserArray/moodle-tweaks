@@ -63,6 +63,10 @@ function updateAllOptions() {
     })
 }
 
+function domainToggled(event) {
+    // todo
+}
+
 function localizePopupHTML() {
     document.querySelectorAll("[data-localize]").forEach(element => {
         console.log(element.getAttribute("data-localize"));
@@ -77,6 +81,7 @@ function localizePopupHTML() {
 document.addEventListener("DOMContentLoaded", () => {
     localizePopupHTML();
     updateAllOptions();
+    document.querySelector("#state#toggle").addEventListener("click", domainToggled);
     document.querySelectorAll("#settings>button").forEach(element => {
         element.addEventListener("click", optionToggled);
     });

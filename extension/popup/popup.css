@@ -78,6 +78,10 @@ button.switch>label {
     padding: 0.5em;
 }
 
+.hidden {
+    display: none;
+}
+
 /* Positioning and sizing */
 
 main, header, footer {
