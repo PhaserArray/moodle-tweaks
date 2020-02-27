@@ -1,2 +1,2 @@
 # moodle-extension
-School project. An extension that tweaks my school's Moodle environment, untested but likely compatible with others too.
+School project. An extension that tweaks my school's Moodle environment, tested using it and https://school.moodledemo.net.
