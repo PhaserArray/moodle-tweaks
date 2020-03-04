@@ -15,6 +15,7 @@ function optionToggled(event) {
     if (element.hasAttribute("data-option")) {
         let option = element.getAttribute("data-option");
         browser.runtime.sendMessage({
+            origin: "popup",
             setOption: {
                 key: option,
                 value: !on
@@ -44,6 +45,7 @@ function optionToggled(event) {
 
 function updateAllOptions() {
     browser.runtime.sendMessage({
+        origin: "popup",
         getOptions: true
     }).then(response => {
         if(response.success !== true) {
@@ -73,9 +75,9 @@ function updateAllOptions() {
 function domainToggled(event) {
     let element = buttonElementFromEvent(event);
     let on = isButtonOn(element);
-    console.log("eeeey");
 
     browser.runtime.sendMessage({
+        origin: "popup",
         currentDomain: !on
     }).then(response => {
         if (response.success === true) {
