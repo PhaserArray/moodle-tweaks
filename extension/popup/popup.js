@@ -1,20 +1,27 @@
 console.log("Popup script!")
 
-function optionToggled(event) {
-    let element = (event.target.tagName == "BUTTON") ? event.target : event.target.parentElement;
+function buttonElementFromEvent(event) {
+    return (event.target.tagName == "BUTTON") ? event.target : event.target.parentElement;
+}
 
-    let enabled = element.classList.contains("enabled");
+function isButtonOn(button) {
+    return button.classList.contains("on");
+}
+
+function optionToggled(event) {
+    let element = buttonElementFromEvent(event);
+    let on = isButtonOn(element);
 
     if (element.hasAttribute("data-option")) {
         let option = element.getAttribute("data-option");
         browser.runtime.sendMessage({
             setOption: {
                 key: option,
-                value: !enabled
+                value: !on
             }
         }).then(response => {
             if (response.success === true) {
-                element.classList.toggle("enabled");
+                element.classList.toggle("on");
                 console.log(`Sucessfully toggled ${option}!`);
             } else {
                 console.log(`response.success !== true for ${option}, unexpected reponse:`);
@@ -31,7 +38,7 @@ function optionToggled(event) {
         // Otherwise, it might as well be a fidget spinner.
         console.log(`Missing data-option attribute on:`);
         console.log(element);
-        element.classList.toggle("enabled");
+        element.classList.toggle("on");
     }
 }
 
@@ -51,9 +58,9 @@ function updateAllOptions() {
         response.options.forEach(option => {
             let optionElement = document.querySelector(`[${option.key}]`);
             if (option.value === true) {
-                optionElement.classList.add("enabled")
+                optionElement.classList.add("on")
             } else if (option.value === false) {
-                optionElement.classList.remove("enabled")
+                optionElement.classList.remove("on")
             }
         });
     },
@@ -64,7 +71,27 @@ function updateAllOptions() {
 }
 
 function domainToggled(event) {
-    // todo
+    let element = buttonElementFromEvent(event);
+    let on = isButtonOn(element);
+    console.log("eeeey");
+
+    browser.runtime.sendMessage({
+        currentDomain: !on
+    }).then(response => {
+        if (response.success === true) {
+            element.classList.toggle("on");
+            document.querySelector("#settings").toggle("hidden");
+            console.log(`Sucessfully toggled domain ${response.domain}!`);
+        } else {
+            element.setAttribute("disabled", true);
+            element.classList.remove("on");
+            console.log(`response.success !== true for ${option}, domain must not be Moodle, button disabled.`);
+        }
+    }, 
+    error =>{
+        console.log(`Something went wrong while trying to toggle domain!`);
+        console.log(error);
+    });
 }
 
 function localizePopupHTML() {
@@ -81,7 +108,7 @@ function localizePopupHTML() {
 document.addEventListener("DOMContentLoaded", () => {
     localizePopupHTML();
     updateAllOptions();
-    document.querySelector("#state#toggle").addEventListener("click", domainToggled);
+    document.querySelector("#state #toggle").addEventListener("click", domainToggled);
     document.querySelectorAll("#settings>button").forEach(element => {
         element.addEventListener("click", optionToggled);
     });

@@ -3,15 +3,17 @@
     --base-background: #bbb;
     --highlighted-color: #ff7518;
 
-    --switch-enabled-color: #ffffff;
-    --switch-enabled-background: #1177d1;
-    --switch-enabled-background-hover: #0555af;
-    --switch-enabled-background-click: #003358;
+    --switch-on-color: #ffffff;
+    --switch-on-background: #1177d1;
+    --switch-on-background-hover: #0555af;
+    --switch-on-background-click: #003358;
 
-    --switch-disabled-color: #282828;
-    --switch-disabled-background: #ffffff;
-    --switch-disabled-background-hover: #dddddd;
-    --switch-disabled-background-click: #bbbbbb;
+    --switch-off-color: #282828;
+    --switch-off-background: #ffffff;
+    --switch-off-background-hover: #dddddd;
+    --switch-off-background-click: #bbbbbb;
+
+    --switch-disabled-background: #999999;
 
     --shadow: 0 2px 4px #00000015, 0 -2px 4px #00000015;
 }
@@ -104,49 +106,62 @@ main :not(:first-child).segment {
     margin-top: 1em
 }
 
-/* Switch Button Enabled */
-
-button.switch.enabled {
-    color: var(--switch-enabled-color);
-    background-color: var(--switch-enabled-background);
-}
-
-button.switch.enabled:hover {
-    background-color: var(--switch-enabled-background-hover);
-    box-shadow: inset var(--shadow);
-}
-
-button.switch.enabled:active {
-    background-color: var(--switch-enabled-background-click);
-    box-shadow: inset var(--shadow);
-}
-
-button.switch.enabled .switch_disabled {
-    display: none;
-}
-
-/* Switch Button Disabled */
+/* Switch Button Off */
 
 button.switch {
-    color: var(--switch-disabled-color);
-    background-color: var(--switch-disabled-background);
+    color: var(--switch-off-color);
+    background-color: var(--switch-off-background);
     cursor: pointer;
 }
 
-button.switch:hover {
-    background-color: var(--switch-disabled-background-hover);
+button.switch:not(:disabled):hover {
+    background-color: var(--switch-off-background-hover);
     box-shadow: inset var(--shadow);
 }
 
-button.switch:active {
-    background-color: var(--switch-disabled-background-click);
+button.switch:not(:disabled):active {
+    background-color: var(--switch-off-background-click);
     box-shadow: inset var(--shadow);
 }
 
-button.switch:not(.enabled) .switch_enabled {
+/* Switch Button On */
+
+button.switch:not(:disabled).on {
+    color: var(--switch-on-color);
+    background-color: var(--switch-on-background);
+}
+
+button.switch:not(:disabled).on:hover {
+    background-color: var(--switch-on-background-hover);
+    box-shadow: inset var(--shadow);
+}
+
+button.switch:not(:disabled).on:active {
+    background-color: var(--switch-on-background-click);
+    box-shadow: inset var(--shadow);
+}
+
+
+/* Switch Button Disabled */
+
+button:disabled {
+    cursor: not-allowed;
+    background-color: var(--switch-disabled-background);
+    box-shadow: inset var(--shadow);
+}
+
+button:disabled>label {
+    cursor: not-allowed;
+}
+
+/* Switch Display */
+
+button.switch.on .switch_off {
     display: none;
 }
 
-button.switch.neither>label {
+button.switch:not(.on) .switch_on, 
+button.switch:not(:disabled) .switch_disabled, 
+button.switch:disabled>label:not(.switch_disabled) {
     display: none;
 }

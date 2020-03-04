@@ -11,13 +11,21 @@
         "message": "school.moodledemo.net",
         "description": "Example of a domain, should not actually show up."
     },
-    "domainEnabledTitle": {
+    "domainNotMoodle": {
+        "message": "Not Moodle",
+        "description": "Shown after a domain is determined to be not Moodle."
+    },
+    "domainOnTitle": {
         "message": "Click to stop running the extension on this website!",
         "description": "Title/Tooltip shown when the extension is running on the shown domain."
     },
-    "domainDisabledTitle": {
+    "domainOffTitle": {
         "message": "Click to start running the extension on this domain!",
         "description": "Title/Tooltip shown when the extension is not running on the shown domain."
+    },
+    "domainNotMoodleTitle": {
+        "message": "This is not a valid Moodle environment, you can't run on this domain!",
+        "description": "Title/Tooltip shown when the extension is not able to run on the domain because it's not a Moodle environment."
     },
     "singlePageBooks": {
         "message": "Single Page Books",
