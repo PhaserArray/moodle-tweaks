@@ -13,7 +13,6 @@
     ],
     "background": {
         "scripts": [
-            "libs/jquery-3.4.1.min.js",
             "libs/browser-polyfill.js",
             "libs/content-scripts-register-polyfill.js",
             "background/moodle-controller.js"
