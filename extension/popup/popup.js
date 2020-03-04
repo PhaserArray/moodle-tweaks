@@ -20,7 +20,9 @@ function optionToggled(event) {
                 value: !on
             }
         }).then(response => {
-            if (response.success === true) {
+            if (typeof response !== "undefined" 
+                && "success" in response 
+                && response.success === true) {
                 element.classList.toggle("on");
                 console.log(`Sucessfully toggled ${option}!`);
             } else {
@@ -46,11 +48,13 @@ function updateAllOptions() {
     browser.runtime.sendMessage({
         getOptions: true
     }).then(response => {
-        if(response.success !== true) {
+        if (typeof response === "undefined" 
+            || !("success" in response) 
+            || response.success !== true) {
             console.log("response.success !== true when updating options, unexpected reponse: ");
             console.log(response);
             return;
-        } else if (!"options" in response) {
+        } else if (!("options" in response)) {
             console.log("Options not provided when updating options, unexpected reponse: ");
             console.log(response);
             return;
@@ -77,14 +81,16 @@ function domainToggled(event) {
     browser.runtime.sendMessage({
         currentDomain: !on
     }).then(response => {
-        if (response.success === true) {
+        if (typeof response !== "undefined" 
+            && "success" in response 
+            && response.success === true) {
             element.classList.toggle("on");
-            document.querySelector("#settings").toggle("hidden");
+            document.querySelector("#settings").classList.toggle("hidden");
             console.log(`Sucessfully toggled domain ${response.domain}!`);
         } else {
             element.setAttribute("disabled", true);
             element.classList.remove("on");
-            console.log(`response.success !== true for ${option}, domain must not be Moodle, button disabled.`);
+            console.log(`response.success !== true, domain must not be Moodle, button disabled.`);
         }
     }, 
     error =>{
