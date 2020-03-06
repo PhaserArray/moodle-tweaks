@@ -103,11 +103,20 @@ function getDefaultOptions(domain) {
     };
 }
 
-function messageSetModule(currentDomainOptions) {
-    return new Promise();
+function messageSetModule(currentDomainOptions, setModule) {
+    return new Promise((resolve, reject) => {
+        if (setModule.module in modules) {
+            currentDomainOptions.modules[setModule.module] = setModule.value;
+            setDomainOptions(currentDomainOptions).then(() => {
+                resolve({success: true});
+            });
+        } else {
+            reject("Unknown module!");
+        }
+    });
 }
 
-function messageSetCurrentDomain(currentDomainOptions) {
+function messageSetCurrentDomain(currentDomainOptions, setCurrentDomain) {
     return new Promise();
 }
 
@@ -130,10 +139,10 @@ function onMessage(message) {
     .then(options => {
         switch (true) {
             case ("setModule" in message):
-                return messageSetModule(options);
+                return messageSetModule(options, message.setModule);
 
             case ("setCurrentDomain" in message):
-                return messageSetCurrentDomain(options);
+                return messageSetCurrentDomain(options, message.setCurrentDomain);
 
             case ("getCurrentDomainOptions" in message):
                 return messageGetCurrentDomainOptions(options);

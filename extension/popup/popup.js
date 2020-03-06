@@ -16,7 +16,7 @@ function optionToggled(event) {
         let option = element.getAttribute("data-module");
         browser.runtime.sendMessage({
             setModule: {
-                key: option,
+                module: option,
                 value: !on
             }
         }).then(response => {
@@ -63,7 +63,6 @@ function updateAllOptions() {
         let options = response.options;
         let modules = options.modules;
         Object.keys(modules).forEach(key => {
-            console.log(key);
             let moduleElement = document.querySelector(`[data-module="${key}"]`);
             if (typeof moduleElement !== "undefined") {
                 if (modules[key] === true) {
