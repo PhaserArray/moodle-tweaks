@@ -79,7 +79,7 @@ function domainToggled(event) {
     let on = isButtonOn(element);
 
     browser.runtime.sendMessage({
-        currentDomain: !on
+        setCurrentDomain: !on
     }).then(response => {
         if (typeof response !== "undefined" 
             && "success" in response 
