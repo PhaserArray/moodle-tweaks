@@ -6,6 +6,7 @@
     "default_locale": "en",
     "permissions":[
         "tabs",
+        "storage",
         "https://fonts.googleapis.com/css"
     ],
     "optional_permissions":[
