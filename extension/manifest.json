@@ -2,6 +2,7 @@
     "name": "__MSG_extensionName__",
     "version": "1.0.0",
     "description": "__MSG_extensionDescription__",
+    "homepage_url": "https://github.com/PhaserArray/moodle-extension",
     "manifest_version": 2,
     "default_locale": "en",
     "permissions":[
@@ -18,7 +19,7 @@
             "libs/content-scripts-register-polyfill.js",
             "background/moodle-controller.js"
         ],
-        "persistent": true
+        "persistent": false
     },
     "icons": {
         "128": "images/placeholder-icon-128.png",
