@@ -12,10 +12,10 @@ function optionToggled(event) {
     let element = buttonElementFromEvent(event);
     let on = isButtonOn(element);
 
-    if (element.hasAttribute("data-option")) {
-        let option = element.getAttribute("data-option");
+    if (element.hasAttribute("data-module")) {
+        let option = element.getAttribute("data-module");
         browser.runtime.sendMessage({
-            setOption: {
+            setModule: {
                 key: option,
                 value: !on
             }
@@ -36,9 +36,9 @@ function optionToggled(event) {
         });
     } else {
         // This shouldn't actually happen, it's here for testing.
-        // All options should have the data-option attribute,
+        // All options should have the data-module attribute,
         // Otherwise, it might as well be a fidget spinner.
-        console.log(`Missing data-option attribute on:`);
+        console.log(`Missing data-module attribute on:`);
         console.log(element);
         element.classList.toggle("on");
     }
