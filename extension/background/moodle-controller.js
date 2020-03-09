@@ -1,16 +1,16 @@
 // List of all modules and whether their default state.
 const modules = Object.freeze(
-                {"singlePageBooks": true, 
-                 "singlePageDicts": true, 
-                 "midClickFix": true, 
-                 "popupBlocker": true, 
+                {"singlePageBooks": true,
+                 "singlePageDicts": true,
+                 "midClickFix": true,
+                 "popupBlocker": true,
                  "sessionKeepAlive": true});
 
 // storage_sync_structure = {
 //     prefs: {
 //         "example.com": {
 //             domain: "example.com"
-//             moodle: true, 
+//             moodle: true,
 //             enabled: false,
 //             modules: {
 //                 list: true,
@@ -20,7 +20,7 @@ const modules = Object.freeze(
 //         },
 //         "school.moodledemo.net": {
 //             domain: "school.moodledemo.net"
-//             moodle: false, 
+//             moodle: false,
 //             enabled: true,
 //             modules: {
 //                 potentially: true,
@@ -48,9 +48,7 @@ function getDomainOptions(domain) {
 function getCurrentTab() {
     return new Promise(resolve => {
         browser.tabs.query({active: true, currentWindow: true})
-        .then(tabs => {
-            return resolve(tabs[0]);
-        });
+        .then(tabs => resolve(tabs[0]));
     });
 }
 
@@ -146,7 +144,7 @@ function onMessage(message) {
 
             case ("getCurrentDomainOptions" in message):
                 return messageGetCurrentDomainOptions(options);
-        
+
             default:
                 return Promise.resolve({success:false, reason:"No valid message!"});
         }
