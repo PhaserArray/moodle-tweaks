@@ -1,11 +1,27 @@
 // List of all modules and whether their default state.
-const cache = {};
 const modules = Object.freeze(
                 {"singlePageBooks": true,
                  "singlePageDicts": true,
                  "midClickFix": true,
                  "popupBlocker": true,
                  "sessionKeepAlive": true});
+
+
+
+const cache = {};
+const registered_domains = [];
+
+// Reregisters all domains on first background load:
+browser.storage.local.get()
+.then(items => {
+    Object.assign(cache, items);
+    Object.keys(items).forEach(key => {
+        if (items[key].enabled === true &&
+            items[key].moodle === true) {
+                registerContentScriptForDomain(items[key].domain);
+        }
+    });
+});
 
 // storage_structure = {
 //     prefs: {
@@ -36,6 +52,10 @@ const modules = Object.freeze(
 
 
 // Synchronous functions
+
+function getDomainPermission(domain) {
+    return {origins: ["*://" + domain + "/*"]};
+}
 
 function getDomainFromURL(url) {
     return (new URL(url)).hostname;
@@ -79,7 +99,7 @@ function getDomainOptions(domain) {
             if (Object.entries(results).length === 0) {
                 return reject("not_found");
             }
-            const result = result[domain];
+            const result = results[domain];
             cache[domain] = result;
             return resolve(result);
         });
@@ -106,6 +126,47 @@ async function getCurrentDomainOptions() {
     return getDomainOptions(domain);
 }
 
+function isMoodle(url) {
+    return new Promise(resolve => {
+        fetch(url, {credentials: "same-origin"})
+        .then(response => response.text())
+        .then(text => {resolve(text.split("\n")[3].startsWith("=== 3"));})
+        .catch(() => {resolve(false);});
+    });
+}
+
+function isMoodleDomain(domain) {
+    return new Promise(resolve => {
+        isMoodle("https://" + domain + "/lib/upgrade.txt")
+        .then(() => resolve(isMoodle("http://" + domain + "/lib/upgrade.txt")));
+    });
+}
+
+function hasPermissions(permissions) {
+    return browser.permissions.contains(permissions);
+}
+
+function requestPermissions(permissions) {
+    return browser.permissions.request(permissions);
+}
+
+function registerContentScriptForDomain(domain) {
+    return new Promise(resolve => {
+        browser.contentScripts.register({
+            "js": [{file: "content/module-loader.js"}],
+            "matches": ["https://" + domain + "/*"]
+        })
+        .then(() =>
+        browser.contentScripts.register({
+            "js": [{file: "content/module-loader.js"}],
+            "matches": ["http://" + domain + "/*"]
+        }))
+        .then(() => {
+            registered_domains.push(domain);
+            return resolve();
+        });
+    });
+}
 
 // Message response handlers
 
@@ -121,7 +182,44 @@ function messageSetModule(currentDomainOptions, setModule) {
 }
 
 function messageSetCurrentDomain(currentDomainOptions, setCurrentDomain) {
-    return new Promise();
+    return new Promise((resolve, reject) => {
+        hasPermissions(getDomainPermission(currentDomainOptions.domain))
+        .then(result => {
+            if (result === false) {
+                requestPermissions(getDomainPermission(currentDomainOptions.domain))
+                .then(granted => {
+                    if (granted === false) {
+                        reject("not_granted");
+                    }
+                    resolve(messageSetCurrentDomain(currentDomainOptions, setCurrentDomain));
+                });
+            } else {
+                if (currentDomainOptions.moodle === null) {
+                    isMoodleDomain(currentDomainOptions.domain)
+                    .then(isMoodle => {
+                        currentDomainOptions.moodle = isMoodle;
+                        setDomainOptions(currentDomainOptions).then(() => resolve(messageSetCurrentDomain(currentDomainOptions, setCurrentDomain)));
+                    });
+                } else if (currentDomainOptions.moodle === false) {
+                    resolve({domain: currentDomainOptions.domain,
+                             enabled: currentDomainOptions.enabled,
+                             moodle:currentDomainOptions.moodle});
+                } else {
+                    if (!registered_domains.includes(currentDomainOptions.domain)) {
+                        return registerContentScriptForDomain(currentDomainOptions.domain)
+                        .then(() => {
+                            resolve(messageSetCurrentDomain(currentDomainOptions, setCurrentDomain));
+                        });
+                    } else {
+                        currentDomainOptions.enabled = setCurrentDomain;
+                        setDomainOptions(currentDomainOptions).then(() => resolve({domain: currentDomainOptions.domain,
+                                                                                   enabled: currentDomainOptions.enabled,
+                                                                                   moodle: currentDomainOptions.moodle}));
+                    }
+                }
+            }
+        });
+    });
 }
 
 function messageGetCurrentDomainOptions(currentDomainOptions) {
@@ -129,7 +227,7 @@ function messageGetCurrentDomainOptions(currentDomainOptions) {
         return currentDomainOptions;
     }
     const updatedOptions = updateModulesInOptions(currentDomainOptions);
-    return setDomainOptions(updatedOptions).then(() => {updatedOptions;});
+    return setDomainOptions(updatedOptions).then(() => updatedOptions);
 }
 
 
@@ -143,7 +241,6 @@ function onMessage(message) {
                 return messageSetModule(options, message.setModule);
 
             case ("setCurrentDomain" in message):
-                return Promise.resolve({domain:"hi", enabled:true, moodle:true});
                 return messageSetCurrentDomain(options, message.setCurrentDomain);
 
             case ("getCurrentDomainOptions" in message):
@@ -160,9 +257,12 @@ function onMessage(message) {
             return Promise.reject("unexpected_error_getCurrentDomainOptions");
         }
         return new Promise(resolve => {
-            getCurrentDomain()
-            .then(domain => {
-                const newDomainOptions = getDefaultOptions(domain);
+            getCurrentURL()
+            .then(url => {
+                if (!url.startsWith("http")) {
+                    return resolve({domain: browser.i18n.getMessage("invalidProtocol"), enabled: false, moodle: false, modules: {}});
+                }
+                const newDomainOptions = getDefaultOptions(getDomainFromURL(url));
                 setDomainOptions(newDomainOptions)
                 .then(() => {
                     resolve(newDomainOptions);

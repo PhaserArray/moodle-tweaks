@@ -27,6 +27,10 @@
         "message": "This is not a valid Moodle environment, you can't run on this domain!",
         "description": "Title/Tooltip shown when the extension is not able to run on the domain because it's not a Moodle environment."
     },
+    "invalidProtocol": {
+        "message": "Invalid",
+        "description": "Not using http(s), likely an internal browser page, ftp, or something along those lines."
+    },
     "singlePageBooks": {
         "message": "Single Page Books",
         "description": "Text shown on the toggle for the single page books feature."

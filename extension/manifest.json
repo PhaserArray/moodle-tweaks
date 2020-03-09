@@ -19,7 +19,7 @@
             "libs/content-scripts-register-polyfill.js",
             "background/moodle-controller.js"
         ],
-        "persistent": false
+        "persistent": true
     },
     "icons": {
         "128": "images/placeholder-icon-128.png",
@@ -36,11 +36,5 @@
         },
         "default_title": "Moodle Tweaks Control Panel",
         "default_popup": "popup/popup.html"
-    },
-    "content_scripts": [
-        {
-            "js": ["content/moodle-tweaker.js"],
-            "matches": ["https://google.ee/*"]
-        }
-    ]
+    }
 }

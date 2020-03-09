@@ -13,7 +13,8 @@ function updateDomainElements(domain, enabled, moodle) {
     } else {
         domainElement.removeAttribute("disabled");
     }
-    domainElement.textContent = domain;
+    domainElement.querySelector(".switch_on").textContent = domain;
+    domainElement.querySelector(".switch_off").textContent = domain;
     domainElement.classList.toggle("on", enabled);
     settingsElement.classList.toggle("hidden", !enabled);
 }
