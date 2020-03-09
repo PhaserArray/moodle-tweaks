@@ -4,32 +4,34 @@ function buttonElementFromEvent(event) {
     return (event.target.tagName === "BUTTON") ? event.target : event.target.parentElement;
 }
 
-function isButtonOn(button) {
-    return button.classList.contains("on");
+function updateDomainElements(domain, enabled, moodle) {
+    let domainElement = document.querySelector("#state #toggle");
+    let settingsElement = document.querySelector("#settings");
+
+    if (moodle === false) {
+        domainElement.setAttribute("disabled", "");
+    } else {
+        domainElement.removeAttribute("disabled");
+    }
+    domainElement.textContent = domain;
+    domainElement.classList.toggle("on", enabled);
+    settingsElement.classList.toggle("hidden", !enabled);
 }
 
 function optionToggled(event) {
     let element = buttonElementFromEvent(event);
-    let on = isButtonOn(element);
+    let on = element.classList.contains("on");
+    let option = element.getAttribute("data-module");
 
-    if (element.hasAttribute("data-module")) {
-        let option = element.getAttribute("data-module");
+    if (option !== null) {
         browser.runtime.sendMessage({
             setModule: {
                 module: option,
                 value: !on
             }
         }).then(response => {
-            if (typeof response !== "undefined" 
-                && "success" in response 
-                && response.success === true) {
-                element.classList.toggle("on");
-                console.log(`Sucessfully toggled ${option}!`);
-            } else {
-                console.log(`response.success !== true for ${option}, unexpected reponse:`);
-                console.log(response);
-            }
-        }, 
+            element.classList.toggle("on", response);
+        },
         error =>{
             console.log(`Something went wrong while trying to toggle ${option}:`);
             console.log(error);
@@ -40,7 +42,7 @@ function optionToggled(event) {
         // Otherwise, it might as well be a fidget spinner.
         console.log(`Missing data-module attribute on:`);
         console.log(element);
-        element.classList.toggle("on");
+        element.classList.toggle("on", on);
     }
 }
 
@@ -48,45 +50,13 @@ function updateAllOptions() {
     browser.runtime.sendMessage({
         getCurrentDomainOptions: true
     }).then(response => {
-        if (typeof response === "undefined" 
-            || !("success" in response) 
-            || response.success !== true) {
-            console.log("response.success !== true when updating options, unexpected reponse: ");
-            console.log(response);
-            return;
-        } else if (!("options" in response)) {
-            console.log("Options not provided when updating options, unexpected reponse: ");
-            console.log(response);
-            return;
-        }
-
-        let options = response.options;
-        let modules = options.modules;
-        Object.keys(modules).forEach(key => {
+        Object.keys(response.modules).forEach(key => {
             let moduleElement = document.querySelector(`[data-module="${key}"]`);
-            if (typeof moduleElement !== "undefined") {
-                if (modules[key] === true) {
-                    moduleElement.classList.add("on");
-                } else if (modules[key] === false) {
-                    moduleElement.classList.remove("on");
-                }
+            if (moduleElement !== null) {
+                moduleElement.classList.toggle("on", response.modules[key]);
             }
         });
-
-        let domainElement = document.querySelector("#state #toggle");
-        let settingsElement = document.querySelector("#settings");
-        if (options.enabled === true) {
-            domainElement.classList.add("on");
-            settingsElement.classList.remove("hidden");
-        } else if (options.enabled === false) {
-            domainElement.classList.remove("on");
-            settingsElement.classList.add("hidden");
-        } else if (options.moodle === false) {
-            domainElement.setAttribute("disabled", true);
-            domainElement.classList.remove("on");
-        }
-        domainElement.querySelector(".switch_on").textContent = options.domain;
-        domainElement.querySelector(".switch_off").textContent = options.domain;
+        updateDomainElements(response.domain, response.enabled, response.moodle);
     },
     error => {
         console.log(`Something went wrong when updating options:`);
@@ -96,23 +66,13 @@ function updateAllOptions() {
 
 function domainToggled(event) {
     let element = buttonElementFromEvent(event);
-    let on = isButtonOn(element);
+    let on = element.classList.contains("on");
 
     browser.runtime.sendMessage({
         setCurrentDomain: !on
     }).then(response => {
-        if (typeof response !== "undefined" 
-            && "success" in response 
-            && response.success === true) {
-            element.classList.toggle("on");
-            document.querySelector("#settings").classList.toggle("hidden");
-            console.log(`Sucessfully toggled domain ${response.domain}!`);
-        } else {
-            element.setAttribute("disabled", true);
-            element.classList.remove("on");
-            console.log(`response.success !== true, domain must not be Moodle, button disabled.`);
-        }
-    }, 
+        updateDomainElements(response.domain, response.enabled, response.moodle);
+    },
     error =>{
         console.log(`Something went wrong while trying to toggle domain!`);
         console.log(error);

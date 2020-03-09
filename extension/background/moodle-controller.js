@@ -97,7 +97,7 @@ function getDefaultOptions(domain) {
         domain: domain,
         enabled: false,
         moodle: null,
-        modules: {"singlePageBooks": false}
+        modules: Object.assign({}, modules)
     };
 }
 
@@ -105,11 +105,9 @@ function messageSetModule(currentDomainOptions, setModule) {
     return new Promise((resolve, reject) => {
         if (setModule.module in modules) {
             currentDomainOptions.modules[setModule.module] = setModule.value;
-            setDomainOptions(currentDomainOptions).then(() => {
-                resolve({success: true});
-            });
+            setDomainOptions(currentDomainOptions).then(() => resolve(setModule.value));
         } else {
-            reject("Unknown module!");
+            reject("unknown_module");
         }
     });
 }
@@ -121,12 +119,12 @@ function messageSetCurrentDomain(currentDomainOptions, setCurrentDomain) {
 function messageGetCurrentDomainOptions(currentDomainOptions) {
     return new Promise(resolve => {
         if (isModulesCurrent(currentDomainOptions.modules)) {
-            resolve({success: true, options:currentDomainOptions});
+            resolve(currentDomainOptions);
         } else {
             let updatedOptions = updateModulesInOptions(currentDomainOptions);
             setDomainOptions(updatedOptions)
             .then(() => {
-                resolve({success: true, options:updatedOptions});
+                resolve(updatedOptions);
             });
         }
     });
@@ -146,19 +144,18 @@ function onMessage(message) {
                 return messageGetCurrentDomainOptions(options);
 
             default:
-                return Promise.resolve({success:false, reason:"No valid message!"});
+                return Promise.reject("invalid_message");
         }
     })
     .catch(error => {
         if (error !== "not_found") {
-            console.log("Unknown rejection when trying to process message: ");
+            console.log("Unexpected rejection when trying to get getCurrentDomainOptions: ");
             console.log(error);
-            return Promise.resolve({success:false, reason:"Unknown reject!"});
+            return Promise.reject("unexpected_error_getCurrentDomainOptions");
         }
         return new Promise(resolve => {
             getCurrentDomain()
             .then(domain => {
-                console.log(domain);
                 let newDomainOptions = getDefaultOptions(domain);
                 setDomainOptions(newDomainOptions)
                 .then(() => {
@@ -167,7 +164,7 @@ function onMessage(message) {
                 .catch(error => {
                     console.log("Failed to save new domain options: ");
                     console.log(error);
-                    return Promise.resolve({success:false, reason:"Unable to save!"});
+                    return Promise.reject("new_options_not_saved");
                 });
             });
         });
