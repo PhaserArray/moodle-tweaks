@@ -1,4 +1,5 @@
 // List of all modules and whether their default state.
+const cache = {};
 const modules = Object.freeze(
                 {"singlePageBooks": true,
                  "singlePageDicts": true,
@@ -6,7 +7,7 @@ const modules = Object.freeze(
                  "popupBlocker": true,
                  "sessionKeepAlive": true});
 
-// storage_sync_structure = {
+// storage_structure = {
 //     prefs: {
 //         "example.com": {
 //             domain: "example.com"
@@ -45,49 +46,43 @@ function getDomainOptions(domain) {
     });
 }
 
-function getCurrentTab() {
-    return new Promise(resolve => {
-        browser.tabs.query({active: true, currentWindow: true})
-        .then(tabs => resolve(tabs[0]));
-    });
-}
-
-function getHostnameFromURL(url) {
+function getDomainFromURL(url) {
     return (new URL(url)).hostname;
 }
 
-function getCurrentDomain() {
-    return new Promise(resolve => {
-        getCurrentTab().then(tab => {
-            resolve(getHostnameFromURL(tab.url));
-        });
-    });
+async function getCurrentTab() {
+    const matching_tabs = await browser.tabs.query({active: true, currentWindow: true});
+    return matching_tabs[0];
 }
 
-function getCurrentDomainOptions() {
-    return new Promise((resolve, reject) => {
-        getCurrentDomain()
-        .then(domain => {
-            resolve(getDomainOptions(domain));
-        })
-        .catch(error => {
-            reject(error);
-        });
-    });
+async function getCurrentURL() {
+    const tab = await getCurrentTab();
+    return tab.url;
+}
+
+async function getCurrentDomain() {
+    const url = await getCurrentURL();
+    return getDomainFromURL(url);
+}
+
+async function getCurrentDomainOptions() {
+    const domain = await getCurrentDomain();
+    return getDomainOptions(domain);
 }
 
 function setDomainOptions(domainOptions) {
+    cache[domainOptions.domain] = domainOptions;
     return browser.storage.local.set({[domainOptions.domain]: domainOptions});
 }
 
 function isModulesCurrent(domainModules) {
-    let oldModuleKeys = Object.keys(domainModules).sort();
-    let newModuleKeys = Object.keys(modules).sort();
+    const oldModuleKeys = Object.keys(domainModules).sort();
+    const newModuleKeys = Object.keys(modules).sort();
     return JSON.stringify(oldModuleKeys) === JSON.stringify(newModuleKeys);
 }
 
 function updateModulesInOptions(options) {
-    let updatedModules = Object.assign({}, modules, options.modules);
+    const updatedModules = Object.assign({}, modules, options.modules);
     options.modules = updatedModules;
     return options;
 }
@@ -121,7 +116,7 @@ function messageGetCurrentDomainOptions(currentDomainOptions) {
         if (isModulesCurrent(currentDomainOptions.modules)) {
             resolve(currentDomainOptions);
         } else {
-            let updatedOptions = updateModulesInOptions(currentDomainOptions);
+            const updatedOptions = updateModulesInOptions(currentDomainOptions);
             setDomainOptions(updatedOptions)
             .then(() => {
                 resolve(updatedOptions);
@@ -156,7 +151,7 @@ function onMessage(message) {
         return new Promise(resolve => {
             getCurrentDomain()
             .then(domain => {
-                let newDomainOptions = getDefaultOptions(domain);
+                const newDomainOptions = getDefaultOptions(domain);
                 setDomainOptions(newDomainOptions)
                 .then(() => {
                     resolve(newDomainOptions);
