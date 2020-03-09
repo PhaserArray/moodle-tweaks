@@ -5,8 +5,8 @@ function buttonElementFromEvent(event) {
 }
 
 function updateDomainElements(domain, enabled, moodle) {
-    let domainElement = document.querySelector("#state #toggle");
-    let settingsElement = document.querySelector("#settings");
+    const domainElement = document.querySelector("#state #toggle");
+    const settingsElement = document.querySelector("#settings");
 
     if (moodle === false) {
         domainElement.setAttribute("disabled", "");
@@ -19,9 +19,9 @@ function updateDomainElements(domain, enabled, moodle) {
 }
 
 function optionToggled(event) {
-    let element = buttonElementFromEvent(event);
-    let on = element.classList.contains("on");
-    let option = element.getAttribute("data-module");
+    const element = buttonElementFromEvent(event);
+    const on = element.classList.contains("on");
+    const option = element.getAttribute("data-module");
 
     if (option !== null) {
         browser.runtime.sendMessage({
@@ -51,7 +51,7 @@ function updateAllOptions() {
         getCurrentDomainOptions: true
     }).then(response => {
         Object.keys(response.modules).forEach(key => {
-            let moduleElement = document.querySelector(`[data-module="${key}"]`);
+            const moduleElement = document.querySelector(`[data-module="${key}"]`);
             if (moduleElement !== null) {
                 moduleElement.classList.toggle("on", response.modules[key]);
             }
@@ -65,8 +65,8 @@ function updateAllOptions() {
 }
 
 function domainToggled(event) {
-    let element = buttonElementFromEvent(event);
-    let on = element.classList.contains("on");
+    const element = buttonElementFromEvent(event);
+    const on = element.classList.contains("on");
 
     browser.runtime.sendMessage({
         setCurrentDomain: !on
