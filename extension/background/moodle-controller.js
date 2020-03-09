@@ -34,40 +34,11 @@ const modules = Object.freeze(
 //     }
 // };
 
-function getDomainOptions(domain) {
-    return new Promise((resolve, reject) => {
-        browser.storage.local.get(domain)
-        .then(result => {
-            if (Object.entries(result).length === 0) {
-                return reject("not_found");
-            }
-            return resolve(result[domain]);
-        });
-    });
-}
+
+// Synchronous functions
 
 function getDomainFromURL(url) {
     return (new URL(url)).hostname;
-}
-
-async function getCurrentTab() {
-    const matching_tabs = await browser.tabs.query({active: true, currentWindow: true});
-    return matching_tabs[0];
-}
-
-async function getCurrentURL() {
-    const tab = await getCurrentTab();
-    return tab.url;
-}
-
-async function getCurrentDomain() {
-    const url = await getCurrentURL();
-    return getDomainFromURL(url);
-}
-
-async function getCurrentDomainOptions() {
-    const domain = await getCurrentDomain();
-    return getDomainOptions(domain);
 }
 
 function setDomainOptions(domainOptions) {
@@ -96,6 +67,48 @@ function getDefaultOptions(domain) {
     };
 }
 
+
+// Asynchronous functions
+
+function getDomainOptions(domain) {
+    if (domain in cache) return cache[domain];
+
+    return new Promise((resolve, reject) => {
+        browser.storage.local.get(domain)
+        .then(results => {
+            if (Object.entries(results).length === 0) {
+                return reject("not_found");
+            }
+            const result = result[domain];
+            cache[domain] = result;
+            return resolve(result);
+        });
+    });
+}
+
+async function getCurrentTab() {
+    const matching_tabs = await browser.tabs.query({active: true, currentWindow: true});
+    return matching_tabs[0];
+}
+
+async function getCurrentURL() {
+    const tab = await getCurrentTab();
+    return tab.url;
+}
+
+async function getCurrentDomain() {
+    const url = await getCurrentURL();
+    return getDomainFromURL(url);
+}
+
+async function getCurrentDomainOptions() {
+    const domain = await getCurrentDomain();
+    return getDomainOptions(domain);
+}
+
+
+// Message response handlers
+
 function messageSetModule(currentDomainOptions, setModule) {
     return new Promise((resolve, reject) => {
         if (setModule.module in modules) {
@@ -112,18 +125,15 @@ function messageSetCurrentDomain(currentDomainOptions, setCurrentDomain) {
 }
 
 function messageGetCurrentDomainOptions(currentDomainOptions) {
-    return new Promise(resolve => {
-        if (isModulesCurrent(currentDomainOptions.modules)) {
-            resolve(currentDomainOptions);
-        } else {
-            const updatedOptions = updateModulesInOptions(currentDomainOptions);
-            setDomainOptions(updatedOptions)
-            .then(() => {
-                resolve(updatedOptions);
-            });
-        }
-    });
+    if (isModulesCurrent(currentDomainOptions.modules)) {
+        return currentDomainOptions;
+    }
+    const updatedOptions = updateModulesInOptions(currentDomainOptions);
+    return setDomainOptions(updatedOptions).then(() => {updatedOptions;});
 }
+
+
+// Eventing
 
 function onMessage(message) {
     return getCurrentDomainOptions()
@@ -133,6 +143,7 @@ function onMessage(message) {
                 return messageSetModule(options, message.setModule);
 
             case ("setCurrentDomain" in message):
+                return Promise.resolve({domain:"hi", enabled:true, moodle:true});
                 return messageSetCurrentDomain(options, message.setCurrentDomain);
 
             case ("getCurrentDomainOptions" in message):
