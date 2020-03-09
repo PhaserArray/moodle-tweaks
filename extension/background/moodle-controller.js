@@ -161,9 +161,9 @@ function onMessage(message) {
                 .then(() => {
                     resolve(newDomainOptions);
                 })
-                .catch(error => {
+                .catch(sError => {
                     console.log("Failed to save new domain options: ");
-                    console.log(error);
+                    console.log(sError);
                     return Promise.reject("new_options_not_saved");
                 });
             });
