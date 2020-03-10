@@ -1,3 +1,5 @@
+console.log("moodle-controller.js");
+
 // List of all modules and whether their default state.
 const modules = Object.freeze(
                 {"singlePageBooks": true,
@@ -143,7 +145,7 @@ function isMoodleDomain(domain) {
 }
 
 function hasDomainPermissions(domain) {
-    return browser.permissions.contains({origins: ["*://s" + domain + "/*"]});
+    return browser.permissions.contains({origins: ["*://" + domain + "/*"]});
 }
 
 function registerContentScriptForDomain(domain) {
@@ -151,12 +153,14 @@ function registerContentScriptForDomain(domain) {
         if (!registered_domains.includes(domain))
         {
             browser.contentScripts.register({
-                "js": [{file: "content/module-loader.js"}],
+                "js": [{file: "libs/browser-polyfill.js"},
+                       {file: "content/module-loader.js"}],
                 "matches": ["https://" + domain + "/*"]
             })
             .then(() =>
             browser.contentScripts.register({
-                "js": [{file: "content/module-loader.js"}],
+                "js": [{file: "libs/browser-polyfill.js"},
+                       {file: "content/module-loader.js"}],
                 "matches": ["http://" + domain + "/*"]
             }))
             .then(() => {
@@ -172,7 +176,7 @@ function registerContentScriptForDomain(domain) {
 function unsafeSetDomain(domainOptions, enabled) {
     return new Promise(resolve => {
         domainOptions.enabled = enabled;
-        setDomainOptions(domainOptions.domain)
+        setDomainOptions(domainOptions)
         .then(() => {
             if (domainOptions.enabled === true) {
                 registerContentScriptForDomain(domainOptions.domain)
@@ -192,6 +196,8 @@ function setDomain(domainOptions, enabled) {
                 reject("insufficient_permissions");
             }
 
+            console.log(domainOptions);
+            console.log(enabled);
             if (domainOptions.moodle === null) {
                 isMoodleDomain(domainOptions.domain)
                 .then(isMoodle => {
@@ -207,7 +213,7 @@ function setDomain(domainOptions, enabled) {
                         }
                     });
                 });
-            } if ((domainOptions.moodle === true && enabled === true) || enabled === false) {
+            } else if ((domainOptions.moodle === true && enabled === true) || enabled === false) {
                 unsafeSetDomain(domainOptions, enabled)
                 .then(domainOptions => resolve(domainOptions));
             } else {
@@ -254,7 +260,7 @@ function onMessage(message) {
                 return messageSetModule(options, message.setModule);
 
             case ("setDomain" in message):
-                return messageSetDomain(options, message.setCurrentDomain);
+                return messageSetDomain(options, message.setDomain);
 
             case ("getOptions" in message):
                 return messageGetOptions(options);

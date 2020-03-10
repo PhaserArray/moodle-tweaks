@@ -1,4 +1,4 @@
-console.log("Popup script!");
+console.log("popup.js");
 
 function buttonElementFromEvent(event) {
     return (event.target.tagName === "BUTTON") ? event.target : event.target.parentElement;

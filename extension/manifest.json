@@ -13,6 +13,9 @@
     "optional_permissions":[
         "*://*/*"
     ],
+    "web_accessible_resources": [
+        "content/modules/*"
+    ],
     "background": {
         "scripts": [
             "libs/browser-polyfill.js",
