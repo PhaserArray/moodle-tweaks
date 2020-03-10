@@ -39,5 +39,10 @@
         },
         "default_title": "Moodle Tweaks Control Panel",
         "default_popup": "popup/popup.html"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "strict_min_version": "75.0"
+        }
     }
 }
