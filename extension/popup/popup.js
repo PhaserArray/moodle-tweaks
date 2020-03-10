@@ -13,6 +13,8 @@ function updateDomainElements(domain, enabled, moodle) {
     } else {
         domainElement.removeAttribute("disabled");
     }
+
+    domainElement.setAttribute("data-domain", domain);
     domainElement.querySelector(".switch_on").textContent = domain;
     domainElement.querySelector(".switch_off").textContent = domain;
     domainElement.classList.toggle("on", enabled);
@@ -49,7 +51,7 @@ function optionToggled(event) {
 
 function updateAllOptions() {
     browser.runtime.sendMessage({
-        getCurrentDomainOptions: true
+        getOptions: true
     }).then(response => {
         Object.keys(response.modules).forEach(key => {
             const moduleElement = document.querySelector(`[data-module="${key}"]`);
@@ -67,16 +69,24 @@ function updateAllOptions() {
 
 function domainToggled(event) {
     const element = buttonElementFromEvent(event);
+    const domain = element.getAttribute("data-domain");
     const on = element.classList.contains("on");
 
-    browser.runtime.sendMessage({
-        setCurrentDomain: !on
-    }).then(response => {
-        updateDomainElements(response.domain, response.enabled, response.moodle);
-    },
-    error =>{
-        console.log(`Something went wrong while trying to toggle domain!`);
-        console.log(error);
+    browser.permissions.request({origins: ["*://" + domain + "/*"]})
+    .then(granted => {
+        if (granted === true) {
+            browser.runtime.sendMessage({
+                setDomain: !on
+            }).then(response => {
+                updateDomainElements(response.domain, response.enabled, response.moodle);
+            },
+            error =>{
+                console.log(`Something went wrong while trying to toggle domain!`);
+                console.log(error);
+            });
+        } else {
+            console.log("Domain permissions were not granted!");
+        }
     });
 }
 

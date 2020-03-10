@@ -18,7 +18,11 @@ browser.storage.local.get()
     Object.keys(items).forEach(key => {
         if (items[key].enabled === true &&
             items[key].moodle === true) {
-                registerContentScriptForDomain(items[key].domain);
+                registerContentScriptForDomain(items[key].domain)
+                .catch(error => {
+                    console.log(`Could not restart content script for ${items[key].domain}: `);
+                    console.log(error);
+                });
         }
     });
 });
@@ -52,10 +56,6 @@ browser.storage.local.get()
 
 
 // Synchronous functions
-
-function getDomainPermission(domain) {
-    return {origins: ["*://" + domain + "/*"]};
-}
 
 function getDomainFromURL(url) {
     return (new URL(url)).hostname;
@@ -142,91 +142,104 @@ function isMoodleDomain(domain) {
     });
 }
 
-function hasPermissions(permissions) {
-    return browser.permissions.contains(permissions);
-}
-
-function requestPermissions(permissions) {
-    return browser.permissions.request(permissions);
+function hasDomainPermissions(domain) {
+    return browser.permissions.contains({origins: ["*://s" + domain + "/*"]});
 }
 
 function registerContentScriptForDomain(domain) {
     return new Promise(resolve => {
-        browser.contentScripts.register({
-            "js": [{file: "content/module-loader.js"}],
-            "matches": ["https://" + domain + "/*"]
-        })
-        .then(() =>
-        browser.contentScripts.register({
-            "js": [{file: "content/module-loader.js"}],
-            "matches": ["http://" + domain + "/*"]
-        }))
-        .then(() => {
-            registered_domains.push(domain);
+        if (!registered_domains.includes(domain))
+        {
+            browser.contentScripts.register({
+                "js": [{file: "content/module-loader.js"}],
+                "matches": ["https://" + domain + "/*"]
+            })
+            .then(() =>
+            browser.contentScripts.register({
+                "js": [{file: "content/module-loader.js"}],
+                "matches": ["http://" + domain + "/*"]
+            }))
+            .then(() => {
+                registered_domains.push(domain);
+                return resolve();
+            });
+        } else {
             return resolve();
+        }
+    });
+}
+
+function unsafeSetDomain(domainOptions, enabled) {
+    return new Promise(resolve => {
+        domainOptions.enabled = enabled;
+        setDomainOptions(domainOptions.domain)
+        .then(() => {
+            if (domainOptions.enabled === true) {
+                registerContentScriptForDomain(domainOptions.domain)
+                .then(() => resolve(domainOptions));
+            } else {
+                return resolve(domainOptions);
+            }
+        });
+    });
+}
+
+function setDomain(domainOptions, enabled) {
+    return new Promise((resolve, reject) => {
+        hasDomainPermissions(domainOptions.domain)
+        .then(hasPerms => {
+            if (hasPerms === false) {
+                reject("insufficient_permissions");
+            }
+
+            if (domainOptions.moodle === null) {
+                isMoodleDomain(domainOptions.domain)
+                .then(isMoodle => {
+                    domainOptions.moodle = isMoodle;
+                    setDomainOptions(domainOptions)
+                    .then(() => {
+                        if ((enabled === true && isMoodle === true) ||
+                            enabled === false) {
+                            unsafeSetDomain(domainOptions, enabled)
+                            .then(domainOptions => resolve(domainOptions));
+                        } else {
+                            resolve(domainOptions);
+                        }
+                    });
+                });
+            } if ((domainOptions.moodle === true && enabled === true) || enabled === false) {
+                unsafeSetDomain(domainOptions, enabled)
+                .then(domainOptions => resolve(domainOptions));
+            } else {
+                resolve(domainOptions);
+            }
         });
     });
 }
 
 // Message response handlers
 
-function messageSetModule(currentDomainOptions, setModule) {
+function messageSetModule(domainOptions, setModule) {
     return new Promise((resolve, reject) => {
         if (setModule.module in modules) {
-            currentDomainOptions.modules[setModule.module] = setModule.value;
-            setDomainOptions(currentDomainOptions).then(() => resolve(setModule.value));
+            domainOptions.modules[setModule.module] = setModule.value;
+            setDomainOptions(domainOptions).then(() => resolve(setModule.value));
         } else {
             reject("unknown_module");
         }
     });
 }
 
-function messageSetCurrentDomain(currentDomainOptions, setCurrentDomain) {
-    return new Promise((resolve, reject) => {
-        hasPermissions(getDomainPermission(currentDomainOptions.domain))
-        .then(result => {
-            if (result === false) {
-                requestPermissions(getDomainPermission(currentDomainOptions.domain))
-                .then(granted => {
-                    if (granted === false) {
-                        reject("not_granted");
-                    }
-                    resolve(messageSetCurrentDomain(currentDomainOptions, setCurrentDomain));
-                });
-            } else {
-                if (currentDomainOptions.moodle === null) {
-                    isMoodleDomain(currentDomainOptions.domain)
-                    .then(isMoodle => {
-                        currentDomainOptions.moodle = isMoodle;
-                        setDomainOptions(currentDomainOptions).then(() => resolve(messageSetCurrentDomain(currentDomainOptions, setCurrentDomain)));
-                    });
-                } else if (currentDomainOptions.moodle === false) {
-                    resolve({domain: currentDomainOptions.domain,
-                             enabled: currentDomainOptions.enabled,
-                             moodle:currentDomainOptions.moodle});
-                } else {
-                    if (!registered_domains.includes(currentDomainOptions.domain)) {
-                        return registerContentScriptForDomain(currentDomainOptions.domain)
-                        .then(() => {
-                            resolve(messageSetCurrentDomain(currentDomainOptions, setCurrentDomain));
-                        });
-                    } else {
-                        currentDomainOptions.enabled = setCurrentDomain;
-                        setDomainOptions(currentDomainOptions).then(() => resolve({domain: currentDomainOptions.domain,
-                                                                                   enabled: currentDomainOptions.enabled,
-                                                                                   moodle: currentDomainOptions.moodle}));
-                    }
-                }
-            }
-        });
-    });
+function messageSetDomain(domainOptions, enabled) {
+    return setDomain(domainOptions, enabled);
 }
 
-function messageGetCurrentDomainOptions(currentDomainOptions) {
-    if (isModulesCurrent(currentDomainOptions.modules)) {
-        return currentDomainOptions;
+function messageGetOptions(domainOptions) {
+    if (isModulesCurrent(domainOptions.modules)) {
+        return domainOptions;
     }
-    const updatedOptions = updateModulesInOptions(currentDomainOptions);
+
+    const updatedOptions = updateModulesInOptions(domainOptions);
     return setDomainOptions(updatedOptions).then(() => updatedOptions);
 }
 
@@ -240,21 +253,21 @@ function onMessage(message) {
             case ("setModule" in message):
                 return messageSetModule(options, message.setModule);
 
-            case ("setCurrentDomain" in message):
-                return messageSetCurrentDomain(options, message.setCurrentDomain);
+            case ("setDomain" in message):
+                return messageSetDomain(options, message.setCurrentDomain);
 
-            case ("getCurrentDomainOptions" in message):
-                return messageGetCurrentDomainOptions(options);
+            case ("getOptions" in message):
+                return messageGetOptions(options);
 
             default:
                 return Promise.reject("invalid_message");
         }
     })
     .catch(error => {
-        if (error !== "not_found") {
-            console.log("Unexpected rejection when trying to get getCurrentDomainOptions: ");
+        if (error !== "not_found" || !("getOptions" in message)) {
+            console.log("Unexpected rejection in onMessage: ");
             console.log(error);
-            return Promise.reject("unexpected_error_getCurrentDomainOptions");
+            return Promise.reject(error);
         }
         return new Promise(resolve => {
             getCurrentURL()
@@ -262,6 +275,7 @@ function onMessage(message) {
                 if (!url.startsWith("http")) {
                     return resolve({domain: browser.i18n.getMessage("invalidProtocol"), enabled: false, moodle: false, modules: {}});
                 }
+
                 const newDomainOptions = getDefaultOptions(getDomainFromURL(url));
                 setDomainOptions(newDomainOptions)
                 .then(() => {
