@@ -196,8 +196,6 @@ function setDomain(domainOptions, enabled) {
                 reject("insufficient_permissions");
             }
 
-            console.log(domainOptions);
-            console.log(enabled);
             if (domainOptions.moodle === null) {
                 isMoodleDomain(domainOptions.domain)
                 .then(isMoodle => {
