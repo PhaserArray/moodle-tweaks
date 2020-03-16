@@ -173,6 +173,23 @@ function registerContentScriptForDomain(domain) {
     });
 }
 
+function moodleCheck(domainOptions) {
+    return new Promise(resolve => {
+        if (domainOptions.moodle === null) {
+            isMoodleDomain(domainOptions.domain)
+            .then(isMoodle => {
+                domainOptions.moodle = isMoodle;
+                setDomainOptions(domainOptions)
+                .then(() => {
+                    resolve(domainOptions);
+                });
+            });
+        } else {
+            resolve(domainOptions);
+        }
+    });
+}
+
 function unsafeSetDomain(domainOptions, enabled) {
     return new Promise(resolve => {
         domainOptions.enabled = enabled;
@@ -196,27 +213,16 @@ function setDomain(domainOptions, enabled) {
                 reject("insufficient_permissions");
             }
 
-            if (domainOptions.moodle === null) {
-                isMoodleDomain(domainOptions.domain)
-                .then(isMoodle => {
-                    domainOptions.moodle = isMoodle;
-                    setDomainOptions(domainOptions)
-                    .then(() => {
-                        if ((enabled === true && isMoodle === true) ||
-                            enabled === false) {
-                            unsafeSetDomain(domainOptions, enabled)
-                            .then(domainOptions => resolve(domainOptions));
-                        } else {
-                            resolve(domainOptions);
-                        }
-                    });
-                });
-            } else if ((domainOptions.moodle === true && enabled === true) || enabled === false) {
-                unsafeSetDomain(domainOptions, enabled)
-                .then(domainOptions => resolve(domainOptions));
-            } else {
-                resolve(domainOptions);
-            }
+            moodleCheck(domainOptions)
+            .then(domainOptions => {
+                if ((enabled === true && domainOptions.moodle === true) ||
+                    enabled === false) {
+                    unsafeSetDomain(domainOptions, enabled)
+                    .then(domainOptions => resolve(domainOptions));
+                } else {
+                    resolve(domainOptions);
+                }
+            });
         });
     });
 }
