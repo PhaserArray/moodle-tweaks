@@ -14,7 +14,7 @@
   "dependencies": {},
   "eslintConfig": {
     "parserOptions": {
-        "ecmaVersion": 2017
+      "ecmaVersion": 2017
     },
     "env": {
       "browser": true,
@@ -29,8 +29,14 @@
       "prefer-const": "error",
       "no-fallthrough": "error",
       "no-trailing-spaces": "error",
-      "space-before-function-paren": ["error", "never"],
-      "arrow-body-style": ["error", "as-needed"]
+      "space-before-function-paren": [
+        "error",
+        "never"
+      ],
+      "arrow-body-style": [
+        "error",
+        "as-needed"
+      ]
     }
   }
 }
