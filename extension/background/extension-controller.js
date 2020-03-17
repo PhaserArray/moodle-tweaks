@@ -1,4 +1,4 @@
-console.log("moodle-controller.js");
+console.log("extension-controller.js");
 
 // List of all modules and whether their default state.
 const modules = Object.freeze(
