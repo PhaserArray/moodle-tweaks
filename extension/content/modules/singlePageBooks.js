@@ -62,7 +62,7 @@ async function spin(element) {
 function singlePageBookify() {
     // Create a loading icon and hide contents
     const loadingElement = document.createElement("strong");
-    loadingElement.innerHTML = "⌛";
+    loadingElement.innerHTML = "⟳";
     loadingElement.style.fontSize = "10em";
     loadingElement.style.display = "table";
     loadingElement.style.marginLeft = "auto";
