@@ -20,7 +20,7 @@
         "scripts": [
             "libs/browser-polyfill.js",
             "libs/content-scripts-register-polyfill.js",
-            "background/moodle-controller.js"
+            "background/extension-controller.js"
         ],
         "persistent": true
     },
