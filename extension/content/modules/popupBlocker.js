@@ -20,7 +20,6 @@ for (const anchor of anchors) {
 
     // Don't mess with it if it's the same string.
     if (anchor.onclick.toString() !== anchorOnclick) {
-        console.log(anchorOnclick);
         anchor.onclick = anchorOnclick;
     }
 }
