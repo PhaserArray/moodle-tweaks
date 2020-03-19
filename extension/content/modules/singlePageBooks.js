@@ -1,10 +1,13 @@
 console.log("singlePageBooks.js");
 
 if (document.querySelector("body").id === "page-mod-book-view") {
-    if (!window.location.href.includes("chapterid=")) {
+    if (!(new URLSearchParams(window.location.search)).has("chapterid")) {
         singlePageBookify();
     } else {
-        window.location.href = window.location.href.replace("&chapterid=", "#chapterid");
+        var url = new URL(window.location.href);
+        url.hash = `#chapterid${url.searchParams.get("chapterid")}`;
+        url.searchParams.delete("chapterid");
+        window.location.href = url;
     }
 }
 
@@ -36,8 +39,10 @@ async function loadAllChapters() {
                 const tempElement = document.createElement("object");
                 tempElement.innerHTML = HTMLString;
                 const chapterContentElement = tempElement.querySelector(".book_content");
-                const chapterID = tempElement.querySelector(".action-menu .menubar .dropdown-menu .dropdown-item a[href*='chapterid=']")
-                    .href.split("chapterid=")[1].split("&")[0];
+                // This gets the chapterID from the print chapter button.
+                const chapterID = (new URL(
+                                   tempElement.querySelector(".action-menu .menubar .dropdown-menu .dropdown-item a[href*='chapterid=']").href)
+                                   .searchParams.get("chapterid"));
                 chapterContentElement.querySelector("h3").id = `chapterid${chapterID}`;
                 return chapterContentElement.innerHTML;
             }));
@@ -79,9 +84,8 @@ function singlePageBookify() {
         document.querySelector("#page-content").style.visibility = "visible";
 
         // Scroll to chapter if necessary
-        if (window.location.href.includes("#chapterid")) {
-            const locationID = window.location.href.split("#")[1];
-            document.querySelector(`#${locationID}`).scrollIntoView(true);
+        if (window.location.hash.startsWith("#chapterid")) {
+            document.querySelector(`${window.location.hash}`).scrollIntoView(true);
         }
     });
 
@@ -92,7 +96,12 @@ function singlePageBookify() {
     // Turn all the links into jumping points
     const anchors = document.querySelectorAll("a[href*='&chapterid=']");
     anchors.forEach(anchor => {
-        anchor.href = anchor.href.replace("&chapterid=", "#chapterid");
+        const url = new URL(anchor.href);
+        if (url.searchParams.has("chapterid")) {
+            url.hash = `#chapterid${url.searchParams.get("chapterid")}`;
+            url.searchParams.delete("chapterid");
+            anchor.href = url.href;
+        }
     });
 
     // Make the TOC floaty
