@@ -11,47 +11,33 @@ if (document.querySelector("body").id === "page-mod-book-view") {
     }
 }
 
-function readUint8ArrayStreamToString(stream) {
-    let result = new Array();
-    const reader = stream.getReader();
-
-    return reader.read().then(function processText({done, value}) {
-        if (done) {
-            return new TextDecoder().decode(new Uint8Array(result));
-        }
-        result = result.concat(Array.from(value));
-        return reader.read().then(processText);
-    });
-}
-
-async function loadAllChapters() {
+function loadAllChapters() {
     const tocList = document.querySelector("aside .content [class^='book_toc'] ul");
-    const chaptersFetches = [];
+    const chaptersRequests = [];
     [...tocList.getElementsByTagName("a")].forEach(element => {
-        chaptersFetches.push(fetch(element.href, {credentials: "same-origin"}));
+        const xhr = new XMLHttpRequest();
+        chaptersRequests.push(new Promise(resolve => {
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 &&
+                    (xhr.status === 0 || (xhr.status >= 200 && xhr.status <300))) {
+                    resolve(xhr);
+                }
+            };
+            xhr.open("GET", element.href);
+            xhr.send();
+        }));
     });
-    const chapterRequests = await Promise.all(chaptersFetches);
 
-    const chapters = [];
-    chapterRequests.forEach(chapterResponse => {
-        chapters.push(readUint8ArrayStreamToString(chapterResponse.body)
-            .then(HTMLString => {
-                const tempElement = document.createElement("object");
-                tempElement.innerHTML = HTMLString;
-                const chapterContentElement = tempElement.querySelector(".book_content");
-                // This gets the chapterID from the print chapter button.
-                const chapterID = (new URL(
-                                   tempElement.querySelector(".action-menu .menubar .dropdown-menu .dropdown-item a[href*='chapterid=']").href)
-                                   .searchParams.get("chapterid"));
-                chapterContentElement.querySelector("h3").id = `chapterid${chapterID}`;
-                return chapterContentElement.innerHTML;
-            }));
-    });
-    const chapters_1 = await Promise.all(chapters);
-
+    const parser = new DOMParser();
     const bookContent = document.querySelector(".book_content");
-    chapters_1.forEach(chapter => {
-        bookContent.insertAdjacentHTML("beforeend", chapter);
+    return Promise.all(chaptersRequests).then(chaptersRequests => {
+        chaptersRequests.forEach(chapterRequest => {
+            const chapterDOM = parser.parseFromString(chapterRequest.responseText, "text/html");
+            const chapterContentElement = chapterDOM.querySelector(".book_content");
+            const chapterID = new URL(chapterRequest.responseURL).searchParams.get("chapterid");
+            chapterContentElement.querySelector("h3").id = `chapterid${chapterID}`;
+            bookContent.after(chapterContentElement);
+        });
     });
 }
 
