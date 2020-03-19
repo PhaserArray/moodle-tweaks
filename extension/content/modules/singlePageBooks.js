@@ -36,7 +36,7 @@ function loadAllChapters() {
             const chapterContentElement = chapterDOM.querySelector(".book_content");
             const chapterID = new URL(chapterRequest.responseURL).searchParams.get("chapterid");
             chapterContentElement.querySelector("h3").id = `chapterid${chapterID}`;
-            bookContent.after(chapterContentElement);
+            bookContent.insertAdjacentHTML("beforeend", chapterContentElement.innerHTML);
         });
     });
 }
