@@ -7,6 +7,14 @@
         "message": "A browser extension that applies some tweaks to Moodle.",
         "description": "Extension's description."
     },
+    "helpURL": {
+        "message": "https://github.com/PhaserArray/moodle-tweaks/wiki/Help-(English)",
+        "description": "URL used as the homepage and help URL."
+    },
+    "helpTitle": {
+        "message": "You can hover over buttons for brief explanations or click this button to open the help page.",
+        "description": "This is shown when hovering over the help button."
+    },
     "exampleDomain": {
         "message": "school.moodledemo.net",
         "description": "Example of a domain, should not actually show up."

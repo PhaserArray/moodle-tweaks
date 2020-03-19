@@ -64,7 +64,7 @@ main * {
     font-size: medium;
 }
 
-header, footer, #state, #settings {
+header, footer, #state, #settings, footer * {
     background: var(--background);
     box-shadow: var(--shadow);
 }
@@ -104,6 +104,28 @@ button.switch {
 
 main :not(:first-child).segment {
     margin-top: 1em
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+footer > * {
+    display: inline;
+    padding: 0 0.5em 0 0.5em;
+}
+
+footer #help {
+    margin-right: 0;
+    cursor: help;
+    text-decoration: none;
+}
+
+footer #version {
+    margin-left: 50%;
+    transform: translate(-50%);
 }
 
 /* Switch Button Off */

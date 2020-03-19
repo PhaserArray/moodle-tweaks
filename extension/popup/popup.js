@@ -90,6 +90,10 @@ function domainToggled(event) {
     });
 }
 
+function openHelpPage(event) {
+    window.open(event.target.href);
+}
+
 function localizePopupHTML() {
     document.querySelectorAll("[data-localize]").forEach(element => {
         element.innerHTML = browser.i18n.getMessage(element.getAttribute("data-localize"));
@@ -97,12 +101,16 @@ function localizePopupHTML() {
     document.querySelectorAll("[data-localize-title]").forEach(element => {
         element.setAttribute("title", browser.i18n.getMessage(element.getAttribute("data-localize-title")));
     });
+    document.querySelectorAll("[data-localize-href]").forEach(element => {
+        element.href = browser.i18n.getMessage(element.getAttribute("data-localize-href"));
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     localizePopupHTML();
     updateAllOptions();
     document.querySelector("#state #toggle").addEventListener("click", domainToggled);
+    document.querySelector("footer #help").addEventListener("click", openHelpPage);
     document.querySelectorAll("#settings>button").forEach(element => {
         element.addEventListener("click", optionToggled);
     });
