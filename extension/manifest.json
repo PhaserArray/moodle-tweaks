@@ -25,17 +25,21 @@
         "persistent": true
     },
     "icons": {
-        "128": "images/placeholder-icon-128.png",
-        "48": "images/placeholder-icon-48.png",
-        "32": "images/placeholder-icon-32.png",
-        "16": "images/placeholder-icon-16.png"
+        "256": "images/moodle-tweaks-icon-128.png",
+        "128": "images/moodle-tweaks-icon-128.png",
+        "64": "images/moodle-tweaks-icon-64.png",
+        "48": "images/moodle-tweaks-icon-48.png",
+        "32": "images/moodle-tweaks-icon-32.png",
+        "16": "images/moodle-tweaks-icon-16.png"
     },
     "browser_action": {
         "default_icon": {
-            "128": "images/placeholder-icon-128.png",
-            "48": "images/placeholder-icon-48.png",
-            "32": "images/placeholder-icon-32.png",
-            "16": "images/placeholder-icon-16.png"
+            "256": "images/moodle-tweaks-icon-128.png",
+            "128": "images/moodle-tweaks-icon-128.png",
+            "64": "images/moodle-tweaks-icon-64.png",
+            "48": "images/moodle-tweaks-icon-48.png",
+            "32": "images/moodle-tweaks-icon-32.png",
+            "16": "images/moodle-tweaks-icon-16.png"
         },
         "default_title": "Moodle Tweaks Control Panel",
         "default_popup": "popup/popup.html"
