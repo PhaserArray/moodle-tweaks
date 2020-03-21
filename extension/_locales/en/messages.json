@@ -32,7 +32,7 @@
         "description": "Title/Tooltip shown when the extension is not running on the shown domain."
     },
     "domainNotMoodleTitle": {
-        "message": "This domain isn't a valid Moodle 3.x environment, the extension run here!",
+        "message": "This site isn't a valid Moodle 3.x environment, the extension run here!",
         "description": "Title/Tooltip shown when the extension is not able to run on the domain because it's not a Moodle environment."
     },
     "singlePageBooks": {
@@ -56,23 +56,23 @@
         "description": "Text shown on the toggle for the session keep-alive feature."
     },
     "singlePageBooksTitle": {
-        "message": "Single page books combines Moodle's multi-page books into a single long page, with the TOC scrolling you around it.\nNOTE: Loading all those pages at once can take several seconds, it probably isn't stuck loading.",
+        "message": "This module combines Moodle's multi-page books into a single long page, with the TOC scrolling you around it.\nWARNING: Loading large books may take a little while, it probably hasn't crashed while loading.",
         "description": "Text shown when hovering over the toggle for the single page books feature."
     },
     "singlePageDictsTitle": {
-        "message": "Single page dictionaries automatically displays all pages in a dictionary.",
+        "message": "This module automatically displays all pages in a Moodle dictionary.",
         "description": "Text shown when hovering over the toggle for the single page dictionaries feature."
     },
     "middleClickFixTitle": {
-        "message": "Middle-click fix lets you middle click on certain external links without having to click on the link a second time on the redirect page.",
+        "message": "This module lets you middle click on certain external links without having to click on the link a second time on the redirect page.",
         "description": "Text shown when hovering over the toggle for the middle-click fix feature."
     },
     "popupLinkBlockerTitle": {
-        "message": "Popups as tabs forces any links that would normally open in a small popup box to be opened as a normal tab.",
+        "message": "This module forces any links that would normally open in a small popup box to be opened as a normal tab.",
         "description": "Text shown when hovering over the toggle for the popup blocker feature."
     },
     "sessionKeepAliveTitle": {
-        "message": "It prevents logging out while idle by occasionally sending a request to the site's home page.",
+        "message": "This module prevents logging out while idle by occasionally sending a request to the site's home page.",
         "description": "Text shown when hovering over the toggle for the session keep-alive feature."
     }
 }
