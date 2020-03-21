@@ -1,0 +1,78 @@
+{
+    "extensionName": {
+        "message": "Moodle Tweaks",
+        "description": "Name of the extension."
+    },
+    "extensionDescription": {
+        "message": "Brauseri laiendus, mis kohendab mõningaid asju Moodle keskkonnas.",
+        "description": "Extension's description."
+    },
+    "helpURL": {
+        "message": "https://github.com/PhaserArray/moodle-tweaks/wiki/Help-(Estonian)",
+        "description": "URL used as the help URL."
+    },
+    "helpTitle": {
+        "message": "Nupu kohal hõljudes näete selle funktsiooni kirjeldavat teksti või võite siin vajutada abilehele avamiseks.",
+        "description": "This is shown when hovering over the help button."
+    },
+    "exampleDomain": {
+        "message": "school.moodledemo.net",
+        "description": "Example of a domain, should not actually show up."
+    },
+    "domainNotMoodle": {
+        "message": "Pole Moodle",
+        "description": "Shown after a domain is determined to be not Moodle."
+    },
+    "domainOnTitle": {
+        "message": "Vajuta laienduse sellel saidil välja lülitamiseks!\nÄra unustada pärast värskendada juba lahti olevaid Moodle lehti muudatuste jõustamiseks.",
+        "description": "Title/Tooltip shown when the extension is running on the shown domain."
+    },
+    "domainOffTitle": {
+        "message": "Vajuta laienduse sellel saidil sisse lülitamiseks!\nPalun luba ligipääs sellele saidile, kui seda küsitakse.\nÄra unustada pärast värskendada juba lahti olevaid Moodle lehti muudatuste jõustamiseks.",
+        "description": "Title/Tooltip shown when the extension is not running on the shown domain."
+    },
+    "domainNotMoodleTitle": {
+        "message": "See sait ei ole Moodle 3.x keskkond, laiendus ei saa siin joosta.",
+        "description": "Title/Tooltip shown when the extension is not able to run on the domain because it's not a Moodle environment."
+    },
+    "singlePageBooks": {
+        "message": "Ühelehelised raamatud",
+        "description": "Text shown on the toggle for the single page books feature."
+    },
+    "singlePageDicts": {
+        "message": "Ühelehelised sõnastikud",
+        "description": "Text shown on the toggle for the single page dictionaries feature."
+    },
+    "middleClickFix": {
+        "message": "Keskklõpsu parandus",
+        "description": "Text shown on the toggle for the middle-click fix feature."
+    },
+    "popupLinkBlocker": {
+        "message": "Hüpikaknad vahelehtedena",
+        "description": "Text shown on the toggle for the popup blocker feature."
+    },
+    "sessionKeepAlive": {
+        "message": "Väldi välja logimist",
+        "description": "Text shown on the toggle for the session keep-alive feature."
+    },
+    "singlePageBooksTitle": {
+        "message": "See moodul muudab Moodle raamatutes kõik lehed üheks suureks leheks. Järjekorras olevad lingid liigutavad lehekülje vaate asukohta.\nHoiatus: Suurte raamatute laadimisega võib minna aega, see ei ole tõenäoliselt kokkujooksnud.",
+        "description": "Text shown when hovering over the toggle for the single page books feature."
+    },
+    "singlePageDictsTitle": {
+        "message": "See moodul laadib automaatselt Moodle sõnastikes kõik lehed.",
+        "description": "Text shown when hovering over the toggle for the single page dictionaries feature."
+    },
+    "middleClickFixTitle": {
+        "message": "See moodul laseb ühe keskklõpsuga väliseid linke avada, vältides teist vahelehte, kus tuleb teistkorda lingile vajutada.",
+        "description": "Text shown when hovering over the toggle for the middle-click fix feature."
+    },
+    "popupLinkBlockerTitle": {
+        "message": "See moodul sunnib hüpikaknas avanevad lingid tavaliselt avanema.",
+        "description": "Text shown when hovering over the toggle for the popup blocker feature."
+    },
+    "sessionKeepAliveTitle": {
+        "message": "See moodul üritab vältida välja logimist pikalt ühes kohas olles.",
+        "description": "Text shown when hovering over the toggle for the session keep-alive feature."
+    }
+}
