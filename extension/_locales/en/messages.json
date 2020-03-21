@@ -24,15 +24,15 @@
         "description": "Shown after a domain is determined to be not Moodle."
     },
     "domainOnTitle": {
-        "message": "Click to stop running the extension on this website!",
+        "message": "Click to stop running the extension on this website!\nDon't forget to refresh any open Moodle pages.",
         "description": "Title/Tooltip shown when the extension is running on the shown domain."
     },
     "domainOffTitle": {
-        "message": "Click to start running the extension on this domain!",
+        "message": "Click to start running the extension on this domain!\nPlease grant permissions, if requested.\nDon't forget to refresh any open Moodle pages.",
         "description": "Title/Tooltip shown when the extension is not running on the shown domain."
     },
     "domainNotMoodleTitle": {
-        "message": "This is not a valid Moodle environment, you can't run on this domain!",
+        "message": "This domain isn't a valid Moodle 3.x environment, the extension run here!",
         "description": "Title/Tooltip shown when the extension is not able to run on the domain because it's not a Moodle environment."
     },
     "invalidProtocol": {
@@ -58,5 +58,25 @@
     "sessionKeepAlive": {
         "message": "Prevent Logging out",
         "description": "Text shown on the toggle for the session keep-alive feature."
+    },
+    "singlePageBooksTitle": {
+        "message": "Single page books combines Moodle's multi-page books into a single long page, with the TOC scrolling you around it.\nNOTE: Loading all those pages at once can take several seconds, it probably isn't stuck loading.",
+        "description": "Text shown when hovering over the toggle for the single page books feature."
+    },
+    "singlePageDictsTitle": {
+        "message": "Single page dictionaries automatically displays all pages in a dictionary.",
+        "description": "Text shown when hovering over the toggle for the single page dictionaries feature."
+    },
+    "middleClickFixTitle": {
+        "message": "Middle-click fix lets you middle click on certain external links without having to click on the link a second time on the redirect page.",
+        "description": "Text shown when hovering over the toggle for the middle-click fix feature."
+    },
+    "popupLinkBlockerTitle": {
+        "message": "Popups as tabs forces any links that would normally open in a small popup box to be opened as a normal tab.",
+        "description": "Text shown when hovering over the toggle for the popup blocker feature."
+    },
+    "sessionKeepAliveTitle": {
+        "message": "It prevents logging out while idle by occasionally sending a request to the site's home page.",
+        "description": "Text shown when hovering over the toggle for the session keep-alive feature."
     }
 }
