@@ -48,7 +48,7 @@
         "description": "Text shown on the toggle for the middle-click fix feature."
     },
     "popupLinkBlocker": {
-        "message": "Popups as Tabs",
+        "message": "No Popups",
         "description": "Text shown on the toggle for the popup blocker feature."
     },
     "sessionKeepAlive": {

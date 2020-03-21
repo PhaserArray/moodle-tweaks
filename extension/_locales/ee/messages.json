@@ -48,7 +48,7 @@
         "description": "Text shown on the toggle for the middle-click fix feature."
     },
     "popupLinkBlocker": {
-        "message": "Hüpikaknad vahelehtedena",
+        "message": "Hüpikakna Eemaldaja",
         "description": "Text shown on the toggle for the popup blocker feature."
     },
     "sessionKeepAlive": {
