@@ -132,7 +132,7 @@ function isMoodle(url) {
     return new Promise(resolve => {
         fetch(url, {credentials: "same-origin"})
         .then(response => response.text())
-        .then(text => {resolve(text.split("\n")[3].startsWith("=== 3"));})
+        .then(text => {resolve(text.slice(0, 250).includes("=== 3."));})
         .catch(() => {resolve(false);});
     });
 }
