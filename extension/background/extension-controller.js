@@ -283,7 +283,7 @@ function onMessage(message) {
             getCurrentURL()
             .then(url => {
                 if (!url.startsWith("http")) {
-                    return resolve({domain: browser.i18n.getMessage("invalidProtocol"), enabled: false, moodle: false, modules: {}});
+                    return resolve({domain: getDomainFromURL(url), enabled: false, moodle: false, modules: {}});
                 }
 
                 const newDomainOptions = getDefaultOptions(getDomainFromURL(url));

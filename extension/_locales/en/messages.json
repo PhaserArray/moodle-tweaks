@@ -9,7 +9,7 @@
     },
     "helpURL": {
         "message": "https://github.com/PhaserArray/moodle-tweaks/wiki/Help-(English)",
-        "description": "URL used as the homepage and help URL."
+        "description": "URL used as the help URL."
     },
     "helpTitle": {
         "message": "You can hover over buttons for brief explanations or click this button to open the help page.",
@@ -34,10 +34,6 @@
     "domainNotMoodleTitle": {
         "message": "This domain isn't a valid Moodle 3.x environment, the extension run here!",
         "description": "Title/Tooltip shown when the extension is not able to run on the domain because it's not a Moodle environment."
-    },
-    "invalidProtocol": {
-        "message": "Invalid",
-        "description": "Not using http(s), likely an internal browser page, ftp, or something along those lines."
     },
     "singlePageBooks": {
         "message": "Single Page Books",
