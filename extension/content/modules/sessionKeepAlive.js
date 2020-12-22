@@ -3,8 +3,8 @@ console.log("sessionKeepAlive.js");
 const keepAliveDelay = 10 * 60 * 1000; // 10 minutes * 60 seconds * 1000 milliseconds
 const keepAliveOn = true;
 
-const targetURL = document.querySelector(".navbar a.navbar-brand").getAttribute("href");
-if (targetURL !== null & targetURL !== "") {
+const targetURL = window.location.origin;
+if (targetURL) {
     keepAlive(targetURL);
 }
 
