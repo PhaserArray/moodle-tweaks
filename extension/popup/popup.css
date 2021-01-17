@@ -73,7 +73,7 @@ button.switch>label {
     cursor: inherit;
     background: transparent;
 
-    /* The button has 0.5em padding, 
+    /* The button has 0.5em padding,
     this forces the label to cover it,
     in order to show tooltip everywhere. */
     margin: -0.5em;
@@ -183,8 +183,8 @@ button.switch.on .switch_off {
     display: none;
 }
 
-button.switch:not(.on) .switch_on, 
-button.switch:not(:disabled) .switch_disabled, 
+button.switch:not(.on) .switch_on,
+button.switch:not(:disabled) .switch_disabled,
 button.switch:disabled>label:not(.switch_disabled) {
     display: none;
 }
